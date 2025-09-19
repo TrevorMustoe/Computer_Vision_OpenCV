@@ -1,19 +1,19 @@
 import numpy as np
 import cv2 as cv
 
-img = cv.imread('pics/chessboard_img.png')
+img = cv.imread('pics/boat.png')
 
-cv.imshow('img', img)
 gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-gray = np.float32(gray)
-dst = cv.cornerHarris(gray, 2, 3, 0.04)
+corners = cv.goodFeaturesToTrack(gray, 100, 0.01, 10)
 
-dst = cv.dilate(dst, None)
+corners = np.int0(corners)
 
-img[dst > 0.01 * dst.max()] = [0, 0, 255]
+for i in corners:
+    x, y = i.ravel()
+    cv.circle(img, (x, y), 3, [255, 255, 0], -1)
 
-cv.imshow('dst', img)
+cv.imshow('Shi-Tomasi Corner Detector', img)
 
 if cv.waitKey(0) & 0xff == 27:
     cv.destroyAllWindows()
